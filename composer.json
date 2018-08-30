@@ -1,9 +1,10 @@
 {
-    "name": "davidpiesse/audio",
-    "description": "A Laravel Nova field.",
+    "name": "davidpiesse/nova-audio",
+    "description": "Audio Field for Laravel Nova",
     "keywords": [
         "laravel",
-        "nova"
+        "nova",
+        "audio"
     ],
     "license": "MIT",
     "require": {
