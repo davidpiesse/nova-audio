@@ -18,14 +18,14 @@ class Audio extends File
 
     public $showOnIndex = true;
 
-    public function preview(callable $previewUrlCallback)
+    public function __construct($name, $attribute = null, $disk = 'public', $storageCallback = null)
     {
-        $this->previewUrlCallback = function(){
+        parent::__construct($name, $attribute, $disk, $storageCallback);
+
+        $this->preview(function() {
             return $this->value
                 ? Storage::disk($this->disk)->url($this->value)
                 : null;
-        };
-
-        return $this;
+        });
     }
 }
