@@ -18,7 +18,7 @@ class Audio extends File
 
     public $showOnIndex = true;
 
-    public function __construct(string $name, ?string $attribute = null, ?string $disk = 'public', ?callable $storageCallback = null)
+    public function __construct($name, $attribute = null, $disk = 'public', $storageCallback = null)
     {
         parent::__construct($name, $attribute, $disk, $storageCallback);
 
