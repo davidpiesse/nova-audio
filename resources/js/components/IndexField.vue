@@ -1,17 +1,23 @@
 <template>
-    <audio 
-        class="block w-full"
-        controls
-        :src="src"
-        :autoplay="autoplay"
-        :preload="preload"
-    />
+    <p>
+        <audio
+            v-if="field.previewUrl"
+            class="block w-full"
+            controls
+            controlslist="nodownload"
+            :src="src"
+            :autoplay="autoplay"
+            :preload="preload"
+        />
+        <span v-else>&mdash;</span>
+    </p>
 </template>
 
 <script>
 export default {
-    props: ['resourceName', 'field'],
-    data(){
+    props: ['viaResource', 'viaResourceId', 'resourceName', 'field'],
+
+    data() {
         return {
             src: this.field.previewUrl,
             autoplay: false,
