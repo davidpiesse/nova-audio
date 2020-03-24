@@ -47,15 +47,17 @@ export default {
     data() {
         return {
             src: this.field.previewUrl,
-            autoplay: false,
-            preload: 'none'
         }
     },
 
-    mounted() {
-        // this.autoplay = this.field.autoplay
-        // this.preload = this.field.preload
-    },
+    computed: {
+        preload() {
+            return this.field.preload || 'none'
+        },
+        autoplay() {
+            return this.field.autoplay || false
+        }
+    }
 
     methods: {
         download() {

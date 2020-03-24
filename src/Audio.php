@@ -28,4 +28,24 @@ class Audio extends File
                 : null;
         });
     }
+
+    /**
+     * Sets the preload property on the Audio tag to the given value
+     * @param string $value the preload value. Can be: auto|metadata|none
+     * @return $this
+     */
+    public function preload($value = 'auto')
+    {
+        return $this->withMeta(['preload' => $value]);
+    }
+
+    /**
+     * Sets the autoplay property on the Audio tag to the given value
+     * @param bool $value
+     * @return $this
+     */
+    public function autoplay($value = true)
+    {
+        return $this->withMeta(['autoplay' => $value]);
+    }
 }

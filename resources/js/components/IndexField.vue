@@ -20,8 +20,15 @@ export default {
     data() {
         return {
             src: this.field.previewUrl,
-            autoplay: false,
-            preload: 'none'
+        }
+    },
+
+    computed: {
+        preload() {
+            return this.field.preload || 'none'
+        },
+        autoplay() {
+            return this.field.autoplay || false
         }
     }
 }
