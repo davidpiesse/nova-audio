@@ -93,7 +93,9 @@ export default {
 
     mounted() {
         this.field.fill = formData => {
-            formData.append(this.field.attribute, this.file, this.fileName)
+            if (this.file) {
+                formData.append(this.field.attribute, this.file, this.fileName)
+            }
         }
     },
 
