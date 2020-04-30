@@ -18,14 +18,23 @@ class Audio extends File
 
     public $showOnIndex = true;
 
-    public function __construct($name, $attribute = null, $disk = 'public', $storageCallback = null)
+    public $expires = null;
+
+    public function __construct($name, $attribute = null, $disk = 'public', $storageCallback = null, $expiration = null)
     {
         parent::__construct($name, $attribute, $disk, $storageCallback);
 
         $this->preview(function() {
             return $this->value
-                ? Storage::disk($this->disk)->url($this->value)
+                ? Storage::disk($this->disk)->temporaryUrl($this->value, $this->expires ? now()->addHours($this->expires): null)
                 : null;
         });
+    }
+
+    public function expires($expiration = null)
+    {
+        $this->expires = $expiration;
+        
+        return $this;
     }
 }
