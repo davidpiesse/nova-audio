@@ -22,6 +22,11 @@ public function fields(Request $request)
     return [
         ...
         Audio::make('Audio')->disk('public'),
+        
+        Audio::make('Audio', function() {
+            return 'path-to-your-folder-on-s3'.$this->audio_file_name_from_model;
+        })->disk('s3')
+        ->expires(5),
         ...
     ];
 }
