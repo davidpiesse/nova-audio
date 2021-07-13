@@ -108,6 +108,7 @@ export default {
             let fileName = path.match(/[^\\/]*$/)[0]
             this.fileName = fileName
             this.file = this.$refs.fileField.files[0]
+            Nova.$emit(this.field.attribute + '-change', this.file)
         },
 
         /**
