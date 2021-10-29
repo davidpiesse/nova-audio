@@ -24,6 +24,8 @@ class Audio extends File
     {
         parent::__construct($name, $attribute, $disk, $storageCallback);
 
+        $this->acceptedTypes('audio/*');
+
         $this->preview(function() {
             return $this->value
                 ? Storage::disk($this->disk)->temporaryUrl($this->value, $this->expires ? now()->addHours($this->expires): null)

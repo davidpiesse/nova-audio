@@ -54,6 +54,7 @@
                     :id="idAttr"
                     name="name"
                     @change="fileChange"
+                    :accept="field.acceptedTypes"
                 />
                 <label :for="labelFor" class="form-file-btn btn btn-default btn-primary">
                     {{__('Choose File')}}
