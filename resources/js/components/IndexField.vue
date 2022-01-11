@@ -1,5 +1,5 @@
 <template>
-    <p>
+    <p class="w-64">
         <audio
             v-if="field.previewUrl"
             class="block w-full"
