@@ -3,11 +3,11 @@
         <template slot="field">
             <div v-if="hasValue" class="mb-6">
                 <template v-if="shouldShowLoader">
-                    <ImageLoader :src="field.thumbnailUrl" class="max-w-xs" @missing="(value) => missing = value" />
+                    <ImageLoader :src="field.thumbnailUrl" class="max-w-xs" @missing="(value) => (missing = value)" />
                 </template>
 
                 <template v-if="field.value && !field.thumbnailUrl">
-                    <card class="flex item-center relative border border-lg border-50 overflow-hidden p-4">
+                    <card class="item-center border-lg border-50 relative flex overflow-hidden border p-4">
                         {{ field.value }}
 
                         <DeleteButton
@@ -19,28 +19,17 @@
                     </card>
                 </template>
 
-                <p
-                    v-if="field.thumbnailUrl"
-                    class="mt-3 flex items-center text-sm"
-                >
-                    <DeleteButton
-                        :dusk="field.attribute + '-delete-link'"
-                        v-if="shouldShowRemoveButton"
-                        @click="confirmRemoval"
-                    >
+                <p v-if="field.thumbnailUrl" class="mt-3 flex items-center text-sm">
+                    <DeleteButton :dusk="field.attribute + '-delete-link'" v-if="shouldShowRemoveButton" @click="confirmRemoval">
                         <span class="class ml-2 mt-1">
-                            {{__('Delete')}}
+                            {{ __('Delete') }}
                         </span>
                     </DeleteButton>
                 </p>
 
                 <portal to="modals">
                     <transition name="fade">
-                        <confirm-upload-removal-modal
-                            v-if="removeModalOpen"
-                            @confirm="removeFile"
-                            @close="closeRemoveModal"
-                        />
+                        <confirm-upload-removal-modal v-if="removeModalOpen" @confirm="removeFile" @close="closeRemoveModal" />
                     </transition>
                 </portal>
             </div>
@@ -56,7 +45,7 @@
                     @change="fileChange"
                 />
                 <label :for="labelFor" class="form-file-btn btn btn-default btn-primary">
-                    {{__('Choose File')}}
+                    {{ __('Choose File') }}
                 </label>
             </span>
 
@@ -64,7 +53,7 @@
                 {{ currentLabel }}
             </span>
 
-            <p v-if="hasError" class="mt-4 text-danger">
+            <p v-if="hasError" class="text-danger mt-4">
                 {{ firstError }}
             </p>
         </template>
@@ -72,7 +61,9 @@
 </template>
 
 <script>
-import { DeleteButton, ImageLoader, FormField, HandlesValidationErrors, Errors } from 'laravel-nova'
+import DeleteButton from '@/components/DeleteButton';
+import ImageLoader from '@/components/ImageLoader';
+import { FormField, HandlesValidationErrors, Errors } from '@/mixins';
 
 export default {
     props: ['resourceId', 'relatedResourceName', 'relatedResourceId', 'viaRelationship'],
@@ -92,11 +83,11 @@ export default {
     }),
 
     mounted() {
-        this.field.fill = formData => {
+        this.field.fill = (formData) => {
             if (this.file) {
-                formData.append(this.field.attribute, this.file, this.fileName)
+                formData.append(this.field.attribute, this.file, this.fileName);
             }
-        }
+        };
     },
 
     methods: {
@@ -104,55 +95,49 @@ export default {
          * Responsd to the file change
          */
         fileChange(event) {
-            let path = event.target.value
-            let fileName = path.match(/[^\\/]*$/)[0]
-            this.fileName = fileName
-            this.file = this.$refs.fileField.files[0]
+            let path = event.target.value;
+            let fileName = path.match(/[^\\/]*$/)[0];
+            this.fileName = fileName;
+            this.file = this.$refs.fileField.files[0];
         },
 
         /**
          * Confirm removal of the linked file
          */
         confirmRemoval() {
-            this.removeModalOpen = true
+            this.removeModalOpen = true;
         },
 
         /**
          * Close the upload removal modal
          */
         closeRemoveModal() {
-            this.removeModalOpen = false
+            this.removeModalOpen = false;
         },
 
         /**
          * Remove the linked file from storage
          */
         async removeFile() {
-            this.uploadErrors = new Errors()
+            this.uploadErrors = new Errors();
 
-            const {
-                resourceName,
-                resourceId,
-                relatedResourceName,
-                relatedResourceId,
-                viaRelationship,
-            } = this
-            const attribute = this.field.attribute
+            const { resourceName, resourceId, relatedResourceName, relatedResourceId, viaRelationship } = this;
+            const attribute = this.field.attribute;
 
             const uri = this.viaRelationship
                 ? `/nova-api/${resourceName}/${resourceId}/${relatedResourceName}/${relatedResourceId}/field/${attribute}?viaRelationship=${viaRelationship}`
-                : `/nova-api/${resourceName}/${resourceId}/field/${attribute}`
+                : `/nova-api/${resourceName}/${resourceId}/field/${attribute}`;
 
             try {
-                await Nova.request().delete(uri)
-                this.closeRemoveModal()
-                this.deleted = true
-                this.$emit('file-deleted')
+                await Nova.request().delete(uri);
+                this.closeRemoveModal();
+                this.deleted = true;
+                this.$emit('file-deleted');
             } catch (error) {
-                this.closeRemoveModal()
+                this.closeRemoveModal();
 
                 if (error.response.status == 422) {
-                    this.uploadErrors = new Errors(error.response.data.errors)
+                    this.uploadErrors = new Errors(error.response.data.errors);
                 }
             }
         },
@@ -160,17 +145,12 @@ export default {
 
     computed: {
         hasError() {
-            return (
-                this.errors.has(this.fieldAttribute) || this.uploadErrors.has(this.fieldAttribute)
-            )
+            return this.errors.has(this.fieldAttribute) || this.uploadErrors.has(this.fieldAttribute);
         },
 
         firstError() {
             if (this.hasError) {
-                return (
-                    this.errors.first(this.fieldAttribute) ||
-                    this.uploadErrors.first(this.fieldAttribute)
-                )
+                return this.errors.first(this.fieldAttribute) || this.uploadErrors.first(this.fieldAttribute);
             }
         },
 
@@ -178,14 +158,14 @@ export default {
          * The current label of the file field
          */
         currentLabel() {
-            return this.fileName || this.label
+            return this.fileName || this.label;
         },
 
         /**
          * The ID attribute to use for the file field
          */
         idAttr() {
-            return this.labelFor
+            return this.labelFor;
         },
 
         /**
@@ -193,33 +173,29 @@ export default {
          * @return {[type]} [description]
          */
         labelFor() {
-            return `file-${this.field.attribute}`
+            return `file-${this.field.attribute}`;
         },
 
         /**
          * Determine whether the field has a value
          */
         hasValue() {
-            return (
-                Boolean(this.field.value || this.field.thumbnailUrl) &&
-                !Boolean(this.deleted) &&
-                !Boolean(this.missing)
-            )
+            return Boolean(this.field.value || this.field.thumbnailUrl) && !Boolean(this.deleted) && !Boolean(this.missing);
         },
 
         /**
          * Determine whether the field should show the loader component
          */
         shouldShowLoader() {
-            return !Boolean(this.deleted) && Boolean(this.field.thumbnailUrl)
+            return !Boolean(this.deleted) && Boolean(this.field.thumbnailUrl);
         },
 
         /**
          * Determine whether the field should show the remove button
          */
         shouldShowRemoveButton() {
-            return Boolean(this.field.deletable)
+            return Boolean(this.field.deletable);
         },
     },
-}
+};
 </script>
