@@ -1,5 +1,5 @@
 Nova.booting((Vue, router) => {
-    Vue.component('index-audio', require('./components/IndexField'));
-    Vue.component('detail-audio', require('./components/DetailField'));
-    Vue.component('form-audio', require('./components/FormField'));
+    Vue.component('IndexAudio', require('./components/IndexField').default);
+    Vue.component('DetailAudio', require('./components/DetailField').default);
+    Vue.component('FormAudio', require('./components/FormField')).default;
 })
